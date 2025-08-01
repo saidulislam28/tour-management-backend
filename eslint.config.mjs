@@ -9,7 +9,8 @@ export default tseslint.config(
   tseslint.configs.stylistic,
   {
     rules: {
-      "no-console": "warn"
+      "no-console": "off",
+      "@typescript-eslint/no-explicit-any": "off"
     }
   }
 );
