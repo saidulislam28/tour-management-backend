@@ -3,14 +3,14 @@ interface Tmeta {
   total: number;
 }
 
-interface Tresponse<T> {
+interface TResponse<T> {
   statusCode: number;
   success: boolean;
   message: string;
   data: T;
   meta?: Tmeta;
 }
-export const sendResponse = <T>(res: Response, data: Tresponse<T>) => {
+export const sendResponse = <T>(res: Response, data: TResponse<T>) => {
   res.status(data.statusCode).json({
     statusCode: data.statusCode,
     success: data.success,
@@ -19,4 +19,3 @@ export const sendResponse = <T>(res: Response, data: Tresponse<T>) => {
     data: data.data,
   });
 };
-

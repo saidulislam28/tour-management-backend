@@ -78,7 +78,7 @@ const CreateTour = CatchAsync(
 );
 const GetAllTour = CatchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const query = req.query;
+    const query:any = req.query;
 
     // console.log(query);
     const Tour = await tourService.GetAllTour(query);

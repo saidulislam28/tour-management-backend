@@ -61,7 +61,8 @@
 									"});",
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -70,7 +71,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Add your name in the body\"\n}",
+							"raw": "{\n    \"email\": \"admin@email.com\",\n    \"password\": \"123456\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -78,12 +79,15 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/info",
+							"raw": "{{base_url}}/api/v1/auth/login",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"info"
+								"api",
+								"v1",
+								"auth",
+								"login"
 							]
 						},
 						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
@@ -210,7 +214,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Sylhet Division\",\r\n    \"desc\": \"Division is most important thing for a tour.\",\r\n    \"thumbnail\": \"saidul-image.jpg\"\r\n}",
+							"raw": "{\r\n    \"name\": \"Gopalganj Division\",\r\n    \"desc\": \"Division is most important thing for a tour.\",\r\n    \"thumbnail\": \"saidul-image.jpg\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -299,7 +303,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Add your name in the body\"\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -322,6 +326,51 @@
 					"response": []
 				},
 				{
+					"name": "get sing division with slug",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Add your name in the body\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/division/dhaka-division",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"division",
+								"dhaka-division"
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+					},
+					"response": []
+				},
+				{
 					"name": "Update data",
 					"event": [
 						{
@@ -333,7 +382,8 @@
 									"});",
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -439,7 +489,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"Chittogong Tour\",\r\n    \"description\": \"Chittogong is most important place for a tour.\",\r\n    \"images\": [\r\n        \"saidul-image.jpg\"\r\n    ],\r\n    \"location\": \"Chittogong\",\r\n    \"costFrom\": 10000,\r\n    \"division\": \"6884c85535c2d8d5578b8de6\",\r\n    \"tourType\": \"6887b916ebc449f24fcdd054\"\r\n}",
+							"raw": "{\r\n    \"title\": \"Sylhet Tour\",\r\n    \"description\": \"Chittogong is most important place for a tour.\",\r\n    \"images\": [\r\n        \"saidul-image.jpg\"\r\n    ],\r\n    \"location\": \"Sylhet\",\r\n    \"costFrom\": 10000,\r\n    \"division\": \"6884c85535c2d8d5578b8de6\",\r\n    \"tourType\": \"6887b916ebc449f24fcdd054\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -544,6 +594,33 @@
 								"api",
 								"v1",
 								"tour"
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "-location",
+									"disabled": true
+								},
+								{
+									"key": "fields",
+									"value": "title,location",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "chit",
+									"disabled": true
+								}
 							]
 						},
 						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
@@ -562,7 +639,8 @@
 									"});",
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],

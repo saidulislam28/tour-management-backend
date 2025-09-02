@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from "express";
 import { CatchAsync } from "../../../utils/catchAsync";
 import { sendResponse } from "../../../utils/response.helper";
@@ -12,23 +13,23 @@ import passport from "passport";
 
 const credentialsLogin = CatchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    // const user = await userService.createUser(req.body);
-
-    // const loginInfo = await AuthService.credentialsLogin(req.body);
-
     passport.authenticate("local", async (error: any, user: any, info: any) => {
       if (error) {
-        return new AppError(401, info.message);
+        return next(new AppError(401, error.message || "Authentication failed"));
       }
 
       if (!user) {
-        return new AppError(401, info.message);
+        return next(new AppError(401, info?.message || "Invalid credentials"));
       }
+
+      console.log("login auth")
 
       const userTokens = await createUserTokens(user);
       const { password, ...rest } = user.toObject();
 
       SetAuthTokens(res, userTokens);
+
+      // console.log("user tokens>>", userTokens)
 
       sendResponse(res, {
         success: true,
@@ -54,6 +55,7 @@ const credentialsLogin = CatchAsync(
   }
 );
 const getAccessToken = CatchAsync(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async (req: Request, res: Response, next: NextFunction) => {
     // const user = await userService.createUser(req.body);
 

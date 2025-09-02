@@ -14,13 +14,13 @@ const divisionSchema = new Schema<IDivision>(
 );
 
 
-divisionSchema.pre("save", async function(next){
+// divisionSchema.pre("save", async function(next){
 
-  
+    
 
 
-  next();
-})
+//   next();
+// })
 
 
 

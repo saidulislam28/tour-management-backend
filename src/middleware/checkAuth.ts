@@ -6,31 +6,31 @@ import { JwtPayload } from "jsonwebtoken";
 
 export const checkAuth =
   (...authRoles: string[]) =>
-  (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const token = req.headers.authorization;
-      
-      console.log(token);
+    (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const token = req.headers.authorization;
 
-      if (!token) {
-        throw new AppError(403, "Token not given");
+        console.log(token);
+
+        if (!token) {
+          throw new AppError(403, "Token not given");
+        }
+
+        const jwtVerifyToken = verifyToken(
+          token,
+          envVars.JWT_SECRET
+        ) as JwtPayload;
+
+        req.user = jwtVerifyToken;
+
+        console.log(jwtVerifyToken);
+
+        if (!authRoles.includes(jwtVerifyToken.role)) {
+          throw new AppError(403, "You are not permitted to access this route");
+        }
+
+        next();
+      } catch (error) {
+        next(error);
       }
-
-      const jwtVerifyToken = verifyToken(
-        token,
-        envVars.JWT_SECRET
-      ) as JwtPayload;
-
-      req.user = jwtVerifyToken;
-
-      console.log(jwtVerifyToken);
-
-      if (!authRoles.includes(jwtVerifyToken.role)) {
-        throw new AppError(403, "You are not permitted to access this route");
-      }
-
-      next();
-    } catch (error) {
-      next(error);
-    }
-  };
+    };
