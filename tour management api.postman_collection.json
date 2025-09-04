@@ -9,7 +9,28 @@
 	"item": [
 		{
 			"name": "user",
-			"item": []
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/user/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"register"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		},
 		{
 			"name": "auth",
