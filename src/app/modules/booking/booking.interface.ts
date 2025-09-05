@@ -1,10 +1,11 @@
 import { Types } from "mongoose";
+import z from "zod";
 
 export enum BOOKING_STATUS {
-  PENDING= "PENDING",
-  CANCEL= "CANCEL",
-  COMPLETE= "COMPLETE",
-  FAILED= "FAILED",
+  PENDING = "PENDING",
+  CANCEL = "CANCEL",
+  COMPLETE = "COMPLETE",
+  FAILED = "FAILED",
 }
 
 
@@ -16,3 +17,13 @@ export interface IBooking {
   status: BOOKING_STATUS
 
 }
+
+
+export const createBookingZodSchema = z.object({
+  tour: z.string(),
+  guestCount: z.number().positive().int()
+});
+
+export const updateBookingStatusZodSchema = z.object({
+  status: z.enum(Object.values(BOOKING_STATUS)as [string])
+})
