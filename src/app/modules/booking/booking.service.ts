@@ -1,12 +1,16 @@
+import httpStatus from 'http-status-codes';
 import AppError from "../../../helpers/CustomError";
+import { getTransactionId } from "../../../utils/transactionId";
+import { PAYMENT_STATUS } from "../payment/payment.interface";
+import { Payment } from "../payment/payment.model";
+import { IsslCommerz } from "../sslCommerz/sslCommerz.interface";
+import { sslService } from "../sslCommerz/sslCommerz.service";
+import { Tour } from "../tour/tour.model";
 import { User } from "../user/user.model";
 import { BOOKING_STATUS, IBooking } from "./booking.interface";
-import httpStatus from 'http-status-codes'
 import { Booking } from "./booking.model";
-import { Payment } from "../payment/payment.model";
-import { PAYMENT_STATUS } from "../payment/payment.interface";
-import { getTransactionId } from "../../../utils/transactionId";
-import { Tour } from "../tour/tour.model";
+
+
 const createBooking = async (payload: Partial<IBooking>, userId: string) => {
   const uniqueTranId = getTransactionId();
 
@@ -31,6 +35,11 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
       transactionId: uniqueTranId,
       amount,
     }], { session })
+
+
+    console.log("payment creation", payment)
+
+
     const updatedBooking = await Booking.findByIdAndUpdate(booking[0]._id, {
       payment: payment[0]._id,
     },
@@ -41,11 +50,29 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
       }
     ).populate("user", "name email phone address")
       .populate("tour", "title costFrom")
-      .populate("payment");
+      .populate("payment") as any;
+
+    const sslPayload: IsslCommerz = {
+      address: updatedBooking?.user.address,
+      name: updatedBooking?.user.name,
+      amount,
+      email: updatedBooking?.user.email,
+      phoneNumber: updatedBooking?.user?.phone,
+      transaction: payment[0]?.transactionId
+    }
+
+    console.log("ssl payload", sslPayload)
+
+    const sslPayment = await sslService.sslPaymentInit(sslPayload)
+
+    console.log("payment", sslPayment);
 
     await session.commitTransaction();
     session.endSession();
-    return updatedBooking;
+    return {
+      booking: updatedBooking,
+      payment_url: sslPayment
+    };
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
