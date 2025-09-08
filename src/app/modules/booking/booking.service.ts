@@ -37,7 +37,7 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
     }], { session })
 
 
-    console.log("payment creation", payment)
+    // console.log("payment creation", payment)
 
 
     const updatedBooking = await Booking.findByIdAndUpdate(booking[0]._id, {
@@ -61,17 +61,17 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
       transaction: payment[0]?.transactionId
     }
 
-    console.log("ssl payload", sslPayload)
+    // console.log("ssl payload", sslPayload)
 
     const sslPayment = await sslService.sslPaymentInit(sslPayload)
 
-    console.log("payment", sslPayment);
+    // console.log("payment", sslPayment);
 
     await session.commitTransaction();
     session.endSession();
     return {
       booking: updatedBooking,
-      payment_url: sslPayment
+      payment_url: sslPayment?.GatewayPageURL
     };
   } catch (error) {
     await session.abortTransaction();
@@ -79,9 +79,9 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
     console.log("error", error)
     throw Error
   }
-
-
 }
+
+
 const getUserBooking = async () => {
   return {}
 }

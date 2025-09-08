@@ -6,7 +6,7 @@ import axios from 'axios'
 
 const sslPaymentInit = async (payload: IsslCommerz) => {
 
-  console.log("payload ssl commerz", payload)
+  // console.log("payload ssl commerz", payload)
 
   try {
     const data = {
@@ -15,9 +15,9 @@ const sslPaymentInit = async (payload: IsslCommerz) => {
       total_amount: payload.amount,
       currency: "BDT",
       tran_id: payload.transaction,
-      success_url: envVars.SSL.SSL_SUCCESS_URL,
-      fail_url: envVars.SSL.SSL_FAIL_URL,
-      cancel_url: envVars.SSL.SSL_CANCEL_URL,
+      success_url: `${envVars.SSL.SSL_SUCCESS_URL}?transactionId=${payload.transaction}&amount=${payload.amount}&status=success`,
+      fail_url: `${envVars.SSL.SSL_FAIL_URL}?transactionId=${payload.transaction}&amount=${payload.amount}&status=fail`,
+      cancel_url: `${envVars.SSL.SSL_CANCEL_URL}?transactionId=${payload.transaction}&amount=${payload.amount}&status=cancel`,
       shipping_method: "N/A",
       product_name: "Tour",
       product_category: "Service",

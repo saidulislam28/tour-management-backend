@@ -3,7 +3,7 @@ import z from "zod";
 
 export enum BOOKING_STATUS {
   PENDING = "PENDING",
-  CANCEL = "CANCEL",
+  CANCEL = "CANCELLED",
   COMPLETE = "COMPLETE",
   FAILED = "FAILED",
 }
