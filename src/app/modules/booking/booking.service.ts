@@ -82,17 +82,61 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
 }
 
 
-const getUserBooking = async () => {
-  return {}
+const getUserBooking = async (userId: string) => {
+
+  try {
+
+    const bookings = await Booking.find({ user: userId }).populate('tour')
+
+    return bookings
+  } catch (error: any) {
+    console.log(error)
+    throw new AppError(401, error.message || error?.response?.data || "Something went wrong when getting user bookings")
+  }
 }
-const getBookingById = async () => {
-  return {}
+const getBookingById = async (bookingId: string) => {
+
+  try {
+
+    const singleBooking = await Booking.findById(bookingId).populate('user', "name email phone address").populate('tour');
+
+    return singleBooking
+
+  } catch (error: any) {
+    console.log(error)
+    throw new AppError(401, error.message || error?.response?.data || "Something went wrong when getting user bookings")
+  }
+
 }
-const updateBookingStatus = async () => {
-  return {}
+const updateBookingStatus = async (bookingId: string, status: any) => {
+
+  try {
+
+    const updateBooking = await Booking.findByIdAndUpdate(bookingId,
+      status
+      , { new: true, runValidators: true })
+
+    return updateBooking
+
+
+  } catch (error: any) {
+    console.log(error)
+    throw new AppError(401, error.message || error?.response?.data || "Something went wrong when getting user bookings")
+  }
+
 }
 const getAllBookings = async () => {
-  return {}
+  try {
+
+    const bookings = await Booking.find().populate('user', "name email phone address").populate('tour');
+
+    return bookings
+
+  } catch (error: any) {
+    console.log(error)
+    throw new AppError(401, error.message || error?.response?.data || "Something went wrong when getting user bookings")
+  }
+
 }
 
 
