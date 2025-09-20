@@ -56,6 +56,8 @@ const DeleteTourType = async (id: string) => {
 const CreateTour = async (payload: ITour) => {
   const { title, ...rest } = payload;
 
+  // throw new AppError(httpStatus.BAD_REQUEST, "Slug Already exist ");
+
   const createSlug = title?.split(" ").join("-").toLocaleLowerCase();
 
   const checkSlugExisting = await Tour.findOne({ slug: createSlug });

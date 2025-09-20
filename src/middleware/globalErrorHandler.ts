@@ -9,13 +9,34 @@ import {
   handleZodError,
 } from "../helpers/error.helpers";
 import { TError } from "../app/interfaces/error";
+import { deleteCloudinaryImage } from "../configs/cloudinary.config";
 
-export const globalMiddleHandler = (
+export const globalMiddleHandler = async (
   err: any,
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
+
+
+  console.log("error from global handler", err)
+
+
+  if (req.file) {
+    await deleteCloudinaryImage(req.file.path)
+  }
+
+  if (req.files && Array.isArray(req.files) && req.files.length) {
+    const imageUrls = (req.files as Express.Multer.File[]).map(file => file.path)
+
+    await Promise.all(imageUrls.map((url) => deleteCloudinaryImage(url)))
+  }
+
+
+
+
+
+
   let statusCode = 500;
   let message = `something went wrong`;
   let errorSources: TError[] = [];
