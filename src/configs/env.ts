@@ -29,6 +29,9 @@ interface ENV_VARS {
     FRONTEND_FAIL_URL: string;
     FRONTEND_CANCEL_URL: string;
   },
+  CLOUDINARY_NAME: string;
+  CLOUDINARY_API_KEY: string;
+  CLOUDINARY_API_SECRET: string;
 }
 
 const loadEnvVars = (): ENV_VARS => {
@@ -57,6 +60,9 @@ const loadEnvVars = (): ENV_VARS => {
     "FRONTEND_SUCCESS_URL",
     "FRONTEND_FAIL_URL",
     "FRONTEND_CANCEL_URL",
+    "CLOUDINARY_NAME",
+    "CLOUDINARY_API_KEY",
+    "CLOUDINARY_API_SECRET",
   ];
 
   envArray.forEach((key) => {
@@ -92,6 +98,9 @@ const loadEnvVars = (): ENV_VARS => {
       FRONTEND_FAIL_URL: process.env.FRONTEND_FAIL_URL as string,
       FRONTEND_CANCEL_URL: process.env.FRONTEND_CANCEL_URL as string,
     },
+    CLOUDINARY_NAME: process.env.CLOUDINARY_NAME as string,
+    CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY as string,
+    CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET as string,
   };
 };
 

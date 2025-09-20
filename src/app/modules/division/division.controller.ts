@@ -5,16 +5,29 @@ import { divisionService } from "./division.service";
 import { sendResponse } from "../../../utils/response.helper";
 import httpStatus from "http-status-codes";
 import { Types } from "mongoose";
+import { IDivision } from "./division.interface";
 
 const CreateDivision = CatchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const division = await divisionService.CreateDivision(req.body);
+
+    console.log({
+      file: req.file,
+      body: req.body
+    })
+
+    const payload: IDivision = {
+      ...req.body,
+      thumbnail: req.file?.path
+    }
+
+    const division = await divisionService.CreateDivision(payload);
 
     sendResponse(res, {
       success: true,
       message: "Division Created Successfully",
       statusCode: httpStatus.CREATED,
       data: division,
+      // data: {},
     });
   }
 );

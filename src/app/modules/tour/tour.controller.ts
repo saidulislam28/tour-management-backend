@@ -5,6 +5,7 @@ import { sendResponse } from "../../../utils/response.helper";
 import httpStatus from "http-status-codes";
 import { Types } from "mongoose";
 import { tourService } from "./tour.service";
+import { ITour } from "./tour.interface";
 
 const CreateTourType = CatchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -66,7 +67,16 @@ const DeleteTourType = CatchAsync(
 
 const CreateTour = CatchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const Tour = await tourService.CreateTour(req.body);
+
+    console.log({ files: req.files })
+
+    const payload: ITour = {
+      ...req.body,
+      images: (req.files as Express.Multer.File[]).map(file => file.path)
+    }
+
+
+    const Tour = await tourService.CreateTour(payload);
 
     sendResponse(res, {
       success: true,
@@ -78,7 +88,7 @@ const CreateTour = CatchAsync(
 );
 const GetAllTour = CatchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const query:any = req.query;
+    const query: any = req.query;
 
     // console.log(query);
     const Tour = await tourService.GetAllTour(query);

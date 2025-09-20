@@ -3,13 +3,19 @@ import { ZodObject } from "zod";
 
 export const validateRequest =
   (zodSchema: ZodObject) =>
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      req.body = await zodSchema.parseAsync(req.body);
-      next();
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
 
-      console.log(req.body);
-    } catch (error) {
-      next(error);
-    }
-  };
+        // req.body = JSON.parse(req.body.data) || req.body;
+        if (req.body.data) {
+          req.body = JSON.parse(req.body.data)
+        }
+
+        req.body = await zodSchema.parseAsync(req.body);
+        next();
+
+        console.log(req.body);
+      } catch (error) {
+        next(error);
+      }
+    };
