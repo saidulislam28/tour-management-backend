@@ -4,6 +4,7 @@ import AppError from "../../../helpers/CustomError";
 import { IDivision } from "./division.interface";
 import { Division } from "./division.model";
 import { Types } from "mongoose";
+import { deleteCloudinaryImage } from "../../../configs/cloudinary.config";
 
 const CreateDivision = async (payload: IDivision) => {
   const { name, ...rest } = payload;
@@ -38,8 +39,12 @@ const GetSingleDivision = async (slug: string) => {
 const UpdateDivision = async (id: string, payload: Partial<IDivision>) => {
   const { name, ...rest } = payload;
 
-  const findDivision = await Division.findOne({ name: payload.name });
+  const existingDivision = await Division.findById(id);
+  if (!existingDivision) {
+    throw new Error("Division not found.");
+  }
 
+  const findDivision = await Division.findOne({ name: payload.name });
   if (!findDivision) {
     payload.slug = name?.split(" ").join("-").toLocaleLowerCase();
   }
@@ -48,6 +53,13 @@ const UpdateDivision = async (id: string, payload: Partial<IDivision>) => {
     new: true,
     runValidators: true,
   });
+
+  console.log("payload thumbnail", payload.thumbnail)
+  console.log(" existingDivision thumbnail", existingDivision.thumbnail)
+
+  if (payload.thumbnail && existingDivision?.thumbnail) {
+    await deleteCloudinaryImage(existingDivision.thumbnail)
+  }
 
   return division;
 };

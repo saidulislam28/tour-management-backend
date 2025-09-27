@@ -64,7 +64,10 @@ const UpdateDivision = async (
   next: NextFunction
 ) => {
   const divId: string = req.params.id;
-  const payload = req.body;
+  const payload: IDivision = {
+    ...req.body,
+    thumbnail: req.file?.path
+  }
   const division = await divisionService.UpdateDivision(divId, payload);
 
   sendResponse(res, {
