@@ -6,6 +6,7 @@ import { Tour, TourType } from "./tour.model";
 import { ITour, ITourType } from "./tour.interface";
 import { excludeField } from "../../constants";
 import { QueryBuilder } from "../../../utils/QueryBuilder";
+import { deleteCloudinaryImage } from "../../../configs/cloudinary.config";
 
 const CreateTourType = async (payload: ITourType) => {
   const checkTourType = await TourType.findOne({ name: payload.name });
@@ -70,8 +71,6 @@ const CreateTour = async (payload: ITour) => {
     slug: createSlug,
   };
 
-  console.log("tour data>>", TourData);
-  // return;
 
   const tour = await Tour.create(TourData);
 
@@ -156,18 +155,43 @@ const GetAllTour = async (query: Record<string, string>) => {
 const UpdateTour = async (id: string, payload: Partial<ITour>) => {
   const { title, ...rest } = payload;
 
-  const findTour = await Tour.findOne({ title: payload.title });
+
+  console.log("payload", payload)
+
+  const findTour = await Tour.findById(id);
+
+  console.log("find tour", findTour)
 
   if (!findTour) {
     payload.slug = title?.split(" ").join("-").toLocaleLowerCase();
   }
 
-  const tour = await Tour.findByIdAndUpdate(id, payload, {
+  if (payload.images && payload.images.length > 0 && findTour?.images && findTour.images.length > 0) {
+    console.log("hitting 1")
+    payload.images = [...payload.images, ...findTour.images]
+  }
+
+  if (payload.deleteImages && payload.deleteImages.length > 0 && findTour?.images && findTour.images.length > 0) {
+    const restDBImages = findTour.images.filter(img => !payload.deleteImages?.includes(img));
+
+    const updatedPayloadImages = (payload.images || [])
+      .filter(img => !payload.deleteImages?.includes(img))
+      .filter(img => !restDBImages.includes(img));
+
+    payload.images = [...restDBImages, ...updatedPayloadImages]
+  }
+
+  const updatedTour = await Tour.findByIdAndUpdate(id, payload, {
     new: true,
     runValidators: true,
   });
 
-  return tour;
+  if (payload.deleteImages && payload.deleteImages.length > 0 && findTour?.images && findTour.images.length > 0) {
+
+    await Promise.all(payload.deleteImages.map(url => deleteCloudinaryImage(url)))
+
+  }
+  return updatedTour;
 };
 
 const DeleteTour = async (id: string) => {

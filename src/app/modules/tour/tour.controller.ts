@@ -103,13 +103,22 @@ const GetAllTour = CatchAsync(
 );
 
 const UpdateTour = async (req: Request, res: Response, next: NextFunction) => {
-  const divId: string = req.params.id;
-  const payload = req.body;
-  const Tour = await tourService.UpdateTour(divId, payload);
+  const tourId: string = req.params.id;
+  // const payload = req.body;
 
+  console.log("req.params.id", req.params.id)
+  console.log("controller payload", req.body)
+  console.log("controller files", req.files)
+
+  const payload: ITour = {
+    ...req.body,
+    images: (req.files as Express.Multer.File[])?.map(file => file.path)
+  }
+
+  const Tour = await tourService.UpdateTour(tourId, payload);
   sendResponse(res, {
     success: true,
-    message: "Tour Created Successfully",
+    message: "Tour updated Successfully",
     statusCode: httpStatus.CREATED,
     data: Tour,
   });

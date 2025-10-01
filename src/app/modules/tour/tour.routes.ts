@@ -3,7 +3,7 @@ import { tourController } from "./tour.controller";
 import { checkAuth } from "../../../middleware/checkAuth";
 import { Role } from "../user/user.interface";
 import { validateRequest } from "../../../utils/ValidateRequest";
-import { createTourZodSchema } from "./tour.interface";
+import { createTourZodSchema, updateTourZodSchema } from "./tour.interface";
 import { multerUpload } from "../../../configs/multer.config";
 const router = Router();
 
@@ -20,7 +20,12 @@ router.post(
   tourController.CreateTour,
 );
 router.get("/", tourController.GetAllTour);
-router.patch("/:id", tourController.UpdateTour);
+router.patch("/:id",
+  checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  multerUpload.array('files'),
+  validateRequest(updateTourZodSchema),
+  tourController.UpdateTour
+);
 router.delete("/:id", tourController.DeleteTour);
 
 export const TourRoutes = router;

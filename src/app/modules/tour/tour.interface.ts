@@ -65,6 +65,7 @@ export interface ITour {
   maxGuest?: number;
   division: Types.ObjectId;
   tourType: Types.ObjectId;
+  deleteImages?: string[]
 }
 
 export interface ITourType {
