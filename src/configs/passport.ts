@@ -2,9 +2,11 @@ import passport from "passport";
 import { Strategy as GoogleStrategy, Profile, VerifyCallback } from "passport-google-oauth20";
 import { envVars } from "./env";
 import { User } from "../app/modules/user/user.model";
-import { Role } from "../app/modules/user/user.interface";
+import { IsActive, Role } from "../app/modules/user/user.interface";
 import { Strategy as LocalStrategy } from "passport-local";
 import bcryptjs from "bcryptjs";
+import httpStatus from 'http-status-codes'
+
 
 passport.use(
   new LocalStrategy(
@@ -21,6 +23,24 @@ passport.use(
 
         if (!user) {
           return done(null, false, { message: "User not found" });
+        }
+
+
+
+        if (!user.isVerified) {
+          // throw new AppError(httpStatus.BAD_REQUEST, "User is Verified")
+
+          return done("User is Verified")
+        }
+
+        if (user.isActive === IsActive.BLOCKED || user.isActive === IsActive.INACTIVE) {
+          // throw new AppError(httpStatus.BAD_REQUEST, "user is not active")
+          return done("User is not Active")
+        }
+        if (!user.isDeleted) {
+          // throw new AppError(httpStatus.BAD_REQUEST, "user is Deleted")
+
+          return done("User is deleted!!!!!")
         }
 
         // Check if user authenticated via Google
@@ -64,6 +84,20 @@ passport.use(
         }
 
         let user = await User.findOne({ email });
+
+        if (user && !user.isVerified) {
+          return done(null, false, { message: "User is Verified" })
+        }
+
+        if (user && (user.isActive === IsActive.BLOCKED || user.isActive === IsActive.INACTIVE)) {
+          return done("User is not Active")
+        }
+        if (user && !user.isDeleted) {
+          return done("User is deleted!!!!!")
+        }
+
+
+
 
         if (!user) {
           user = await User.create({

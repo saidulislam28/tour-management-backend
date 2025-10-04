@@ -3,10 +3,12 @@ import AppError from "../helpers/CustomError";
 import { verifyToken } from "../utils/jwt";
 import { envVars } from "../configs/env";
 import { JwtPayload } from "jsonwebtoken";
-
+import { User } from "../app/modules/user/user.model";
+import httpStatus from 'http-status-codes'
+import { IsActive } from "../app/modules/user/user.interface";
 export const checkAuth =
   (...authRoles: string[]) =>
-    (req: Request, res: Response, next: NextFunction) => {
+    async (req: Request, res: Response, next: NextFunction) => {
       try {
         const token = req.headers.authorization;
 
@@ -20,6 +22,27 @@ export const checkAuth =
           token,
           envVars.JWT_SECRET
         ) as JwtPayload;
+
+
+
+        const isUserExist = await User.findOne({ email: jwtVerifyToken.email })
+
+        if (!isUserExist) {
+          throw new AppError(httpStatus.BAD_REQUEST, "User does not exist")
+        }
+
+        if (!isUserExist.isVerified) {
+          throw new AppError(httpStatus.BAD_REQUEST, "User is Verified")
+        }
+
+        if (isUserExist.isActive === IsActive.BLOCKED || isUserExist.isActive === IsActive.INACTIVE) {
+          throw new AppError(httpStatus.BAD_REQUEST, "user is not active")
+        }
+        if (!isUserExist.isDeleted) {
+          throw new AppError(httpStatus.BAD_REQUEST, "user is Deleted")
+        }
+
+
 
         req.user = jwtVerifyToken;
 

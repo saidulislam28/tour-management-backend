@@ -70,6 +70,11 @@ const createUser = async (payload: Partial<IUser>) => {
   return user;
 };
 
+const getMe = async (userId: string) => {
+  const user = await User.findById(userId).select("-password")
+
+  return user
+};
 const getAllUsers = async () => {
   const users = await User.find({});
 
@@ -87,4 +92,5 @@ export const userService = {
   createUser,
   getAllUsers,
   updateUser,
+  getMe
 };
