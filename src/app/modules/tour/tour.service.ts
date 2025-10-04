@@ -156,18 +156,15 @@ const UpdateTour = async (id: string, payload: Partial<ITour>) => {
   const { title, ...rest } = payload;
 
 
-  console.log("payload", payload)
 
   const findTour = await Tour.findById(id);
 
-  console.log("find tour", findTour)
 
   if (!findTour) {
     payload.slug = title?.split(" ").join("-").toLocaleLowerCase();
   }
 
   if (payload.images && payload.images.length > 0 && findTour?.images && findTour.images.length > 0) {
-    console.log("hitting 1")
     payload.images = [...payload.images, ...findTour.images]
   }
 

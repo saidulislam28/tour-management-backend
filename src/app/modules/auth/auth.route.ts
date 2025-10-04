@@ -10,9 +10,19 @@ router.post("/login", AuthController.credentialsLogin);
 router.post("/refresh-token", AuthController.getAccessToken);
 router.post("/logout", AuthController.logout);
 router.post(
+  "/change-password",
+  checkAuth(...Object.values(Role)),
+  AuthController.ChangePassword
+);
+router.post(
   "/reset-password",
   checkAuth(...Object.values(Role)),
   AuthController.ResetPassword
+);
+router.post(
+  "/set-password",
+  checkAuth(...Object.values(Role)),
+  AuthController.SetPassword
 );
 
 router.get(

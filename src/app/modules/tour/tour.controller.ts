@@ -104,11 +104,7 @@ const GetAllTour = CatchAsync(
 
 const UpdateTour = async (req: Request, res: Response, next: NextFunction) => {
   const tourId: string = req.params.id;
-  // const payload = req.body;
 
-  console.log("req.params.id", req.params.id)
-  console.log("controller payload", req.body)
-  console.log("controller files", req.files)
 
   const payload: ITour = {
     ...req.body,
