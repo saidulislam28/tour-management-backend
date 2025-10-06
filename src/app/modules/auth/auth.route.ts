@@ -25,6 +25,10 @@ router.post(
   checkAuth(...Object.values(Role)),
   AuthController.SetPassword
 );
+router.post(
+  "/forgot-password",
+  AuthController.ForgotPassword
+);
 
 router.get(
   "/google",

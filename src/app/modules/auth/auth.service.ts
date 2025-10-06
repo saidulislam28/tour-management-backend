@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import bcryptjs from "bcryptjs";
 import httpStatus from "http-status-codes";
 import AppError from "../../../helpers/CustomError";
@@ -141,11 +142,44 @@ const SetPassword = async (
 
   await user.save();
 };
+const ForgotPassword = async (
+  userId: string,
+  plainPassword: string
+) => {
+
+  const user = await User.findById(userId)
+
+  if (!user) {
+    throw new AppError(404, "User not found!!!")
+  }
+
+
+
+  if (user.password && user.auths.some(obj => obj.provider === "google")) {
+    throw new AppError(httpStatus.BAD_REQUEST, "You have already set your password")
+  }
+
+  const hashedPassword = await bcryptjs.hash(plainPassword, 10)
+
+  const credentialProvider: IAuthProvider = {
+    provider: 'credentials',
+    providerId: user.email
+  }
+
+  const auths: IAuthProvider[] = [...user.auths, credentialProvider]
+
+  user.password = hashedPassword;
+
+  user.auths = auths;
+
+  await user.save();
+};
 
 export const AuthService = {
   credentialsLogin,
   getNewAccessToken,
   ResetPassword,
   ChangePassword,
-  SetPassword
+  SetPassword,
+  ForgotPassword
 };

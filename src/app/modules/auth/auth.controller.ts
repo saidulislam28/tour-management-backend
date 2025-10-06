@@ -164,6 +164,25 @@ const SetPassword = CatchAsync(
     });
   }
 );
+const ForgotPassword = CatchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { password } = req.body;
+    const decodedToken = req.user as JwtPayload;
+
+
+    const updatedPassword = await AuthService.ForgotPassword(
+      decodedToken.userId,
+      password
+    );
+
+    sendResponse(res, {
+      success: true,
+      message: "Reset Successfully",
+      statusCode: httpStatus.OK,
+      data: "",
+    });
+  }
+);
 
 
 const googleCallbackController = CatchAsync(
@@ -202,5 +221,6 @@ export const AuthController = {
   logout,
   ResetPassword,
   googleCallbackController,
-  SetPassword
+  SetPassword,
+  ForgotPassword
 };
